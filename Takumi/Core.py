@@ -24,7 +24,7 @@ class Main(BaseModule, _RendererBase):
     ConfigClass = TakumiConfig
     I18nClass = TakumiI18n
 
-    def __init__(self, sdk):
+    def __init__(self, sdk): # pyright: ignore[reportMissingSuperCall]
 
         self.sdk = sdk
         self.logger = self.sdk.logger.get_child("Takumi")
