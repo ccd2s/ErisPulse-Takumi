@@ -1,76 +1,32 @@
-from dataclasses import dataclass, field
 from functools import partial
-from typing import Any, final
+from typing import TYPE_CHECKING, Any, final
 
 from ep_plugintakumi_builtin_fonts import get_font_bytes, list_fonts
+from ErisPulse import i18n
 from ErisPulse.Core.Bases import BaseModule
-from ErisPulse.runtime.config_schema import BaseConfig
-from takumi_py import FontResource, GenericFontFamily, Renderer
+from takumi_py import FontResource, Renderer
 from typing_extensions import override
 
-_BUILTIN_FONTS: tuple[tuple[str, str, str, GenericFontFamily], ...] = (
-    ("NotoSansSC-VariableFont_wght.ttf", "Noto Sans SC", "normal", "sans-serif"),
-    ("Roboto-VariableFont_wdth,wght.ttf", "Roboto", "normal", "sans-serif"),
-    ("Roboto-Italic-VariableFont_wdth,wght.ttf", "Roboto", "italic", "sans-serif"),
-    (
-        "SourceCodePro-VariableFont_wght.ttf",
-        "Source Code Pro",
-        "normal",
-        "monospace",
-    ),
-    (
-        "SourceCodePro-Italic-VariableFont_wght.ttf",
-        "Source Code Pro",
-        "italic",
-        "monospace",
-    ),
-)
+from .Config import TakumiConfig
+from .Constants import BUILTIN_FONTS, FONT_AWARE_METHODS
+from .I18n import TakumiI18n
 
-_FONT_AWARE_METHODS = frozenset(
-    {
-        "measure_compiled",
-        "measure_html",
-        "measure_node",
-        "render_animation",
-        "render_compiled",
-        "render_html",
-        "render_node",
-        "render_sequence_at_time",
-        "render_svg_compiled",
-        "render_svg_html",
-        "render_svg_node",
-        "render_svg_template",
-        "render_template",
-    }
-)
-
-
-@dataclass
-class TakumiConfig(BaseConfig):
-    """Takumi 模块配置"""
-
-    enabled: bool = field(
-        default=True,
-        metadata={
-            "description": "是否启用模块",
-        },
-    )
+# 静态分析/IDE 补全用：让 Main 在类型检查时表现为 Renderer 子类；
+if TYPE_CHECKING:
+    _RendererBase = Renderer
+else:
+    _RendererBase = object
 
 
 @final
-class Main(BaseModule):
-    """
-    Takumi 模块
-
-    封装 takumi-py 的 API，并提供开箱即用的中英文字体。
-    """
+class Main(BaseModule, _RendererBase):
 
     ConfigClass = TakumiConfig
+    I18nClass = TakumiI18n
 
-    def __init__(self, sdk=None):
-        from ErisPulse import sdk as _sdk
+    def __init__(self, sdk):
 
-        self.sdk = _sdk if sdk is None else sdk
+        self.sdk = sdk
         self.logger = self.sdk.logger.get_child("Takumi")
         self.storage = self.sdk.storage
         self.adapter = self.sdk.adapter
@@ -79,16 +35,14 @@ class Main(BaseModule):
         self.renderer, self.families = self._create_renderer()
         self.fonts = tuple(list_fonts())
 
-        self.logger.info(
-            f"Takumi 初始化完成，已加载 {len(self.fonts)} 个内置字体文件"
-        )
+        self.logger.info(i18n.t("Takumi.init_done", count=len(self.fonts)))
 
     @staticmethod
     def _create_renderer(**kwargs: Any) -> tuple[Renderer, tuple[str, ...]]:
         kwargs.setdefault("load_default_fonts", False)
         renderer = Renderer(**kwargs)
         families: list[str] = []
-        for filename, name, style, generic_family in _BUILTIN_FONTS:
+        for filename, name, style, generic_family in BUILTIN_FONTS:
             registered = renderer.register_font(
                 FontResource(
                     get_font_bytes(filename),
@@ -102,12 +56,10 @@ class Main(BaseModule):
         return renderer, tuple(dict.fromkeys(families))
 
     def create_renderer(self, **kwargs: Any) -> Renderer:
-        """创建一个已注册插件内置字体的独立 Renderer 实例。"""
         renderer, _ = self._create_renderer(**kwargs)
         return renderer
 
     def __getattr__(self, name: str):
-        """将 takumi-py Renderer API 暴露到模块实例上。"""
         renderer = self.__dict__.get("renderer")
         if renderer is None:
             raise AttributeError(name)
@@ -119,7 +71,7 @@ class Main(BaseModule):
                 f"{type(self).__name__!s} object has no attribute {name!r}"
             ) from None
 
-        if name in _FONT_AWARE_METHODS:
+        if name in FONT_AWARE_METHODS:
             return partial(self._call_renderer, name)
         return attribute
 
@@ -140,23 +92,11 @@ class Main(BaseModule):
 
     @override
     async def on_load(self, event: dict[str, Any]) -> bool:
-        """
-        模块被加载时调用
-
-        :param event: 事件内容
-        :return: 处理结果
-        """
         # await self._register_message_handlers()
-        self.logger.info(f"模块已加载: {event}")
+        self.logger.info(i18n.t("Takumi.module_loaded", event=event))
         return True
 
     @override
     async def on_unload(self, event: dict[str, Any]) -> bool:
-        """
-        模块被卸载时调用
-
-        :param event: 事件内容
-        :return: 处理结果
-        """
-        self.logger.info(f"模块已卸载: {event}")
+        self.logger.info(i18n.t("Takumi.module_unloaded", event=event))
         return True

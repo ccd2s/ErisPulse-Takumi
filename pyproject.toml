@@ -9,7 +9,7 @@ authors = [ { name = "ccd2s", email = "tasaedem@outlook.com" } ]
 
 dependencies = [
     "takumi-py>=0.3.0",
-    "ErisPulse>=2.6.3",
+    "ErisPulse>=2.7.0-dev.0",
     "ErisPulse-PluginTakumi-Builtin-Fonts==1.1.0"
 ]
 

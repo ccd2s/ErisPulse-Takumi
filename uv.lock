@@ -234,7 +234,7 @@ wheels = [
 
 [[package]]
 name = "erispulse"
-version = "2.6.3"
+version = "2.7.0.dev5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -244,13 +244,22 @@ dependencies = [
     { name = "uvicorn" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/4e/1661f4efc8269af792ce3ba7536bf6e71de949adb75db47659af01b10bec/erispulse-2.6.3.tar.gz", hash = "sha256:323dc1f2f86a345fa47d468cfaa22bcd627fe3c00479c4d3e4a526dd57159230", size = 359993, upload-time = "2026-07-25T06:09:15.891Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a9/a4/16f92ffe9ba0b3fa247daef5f05e8b85da0fb65f5710c0f22ec35a3e5915/erispulse-2.7.0.dev5.tar.gz", hash = "sha256:baf6df9c256d4d829694449039e50446d9eb76e29b37f3d97dbbecb3b153cd3d", size = 404061, upload-time = "2026-08-01T20:52:28.206Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/78/c521f0cfc733b0acceb1cfa3cc5f284e46084163e0fd7e1db4ef621b554c/erispulse-2.6.3-py3-none-any.whl", hash = "sha256:6942774034864b28dfc58dc8d34bd2930d77333257c05ad3dc0c4b764346ac39", size = 419953, upload-time = "2026-07-25T06:09:13.866Z" },
+    { url = "https://files.pythonhosted.org/packages/39/55/f2770ab501643a23bbffd42d7d0ad72037aca8020edaf1ed2cd8d818a312/erispulse-2.7.0.dev5-py3-none-any.whl", hash = "sha256:c23ac81b89d616ad2798101d8834798a973baef724e3c6a942a16d83c0b14ce5", size = 469113, upload-time = "2026-08-01T20:52:26.185Z" },
 ]
 
 [[package]]
-name = "erispulse-plugintakumi"
+name = "erispulse-plugintakumi-builtin-fonts"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/5f/e9473ed81c2c2258bd9571e879f8fa571bcd7cb231c842a743f02309e3d1/erispulse_plugintakumi_builtin_fonts-1.1.0.tar.gz", hash = "sha256:91a0884b2f7664e3db80ed463c346c590b60e8ac3c9900fba6d9e9ca78ff8136", size = 12062728, upload-time = "2026-08-03T14:00:45.247Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ea/7f/1ccc665ef4786c1847775859465d72927f7f91f199c056eab2373ef47540/erispulse_plugintakumi_builtin_fonts-1.1.0-py3-none-any.whl", hash = "sha256:b59859343ebfbae6c753fc8eebb0743859c3cf8e42e83af7bb430d663dd201c3", size = 12185637, upload-time = "2026-08-03T13:59:01.731Z" },
+]
+
+[[package]]
+name = "erispulse-takumi"
 version = "1.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -261,18 +270,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "erispulse", specifier = ">=2.6.3" },
+    { name = "erispulse", specifier = ">=2.7.0.dev0" },
     { name = "erispulse-plugintakumi-builtin-fonts", specifier = "==1.1.0" },
     { name = "takumi-py", specifier = ">=0.3.0" },
-]
-
-[[package]]
-name = "erispulse-plugintakumi-builtin-fonts"
-version = "1.1.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/21/5f/e9473ed81c2c2258bd9571e879f8fa571bcd7cb231c842a743f02309e3d1/erispulse_plugintakumi_builtin_fonts-1.1.0.tar.gz", hash = "sha256:91a0884b2f7664e3db80ed463c346c590b60e8ac3c9900fba6d9e9ca78ff8136", size = 12062728, upload-time = "2026-08-03T14:00:45.247Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ea/7f/1ccc665ef4786c1847775859465d72927f7f91f199c056eab2373ef47540/erispulse_plugintakumi_builtin_fonts-1.1.0-py3-none-any.whl", hash = "sha256:b59859343ebfbae6c753fc8eebb0743859c3cf8e42e83af7bb430d663dd201c3", size = 12185637, upload-time = "2026-08-03T13:59:01.731Z" },
 ]
 
 [[package]]
