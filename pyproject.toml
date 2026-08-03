@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.urls]
-"homepage" = "https://github.com/ccd2s/ErispulseTakumi"
+"homepage" = "https://github.com/ccd2s/ErisPulse-Takumi"
 
 [project.entry-points]
 "erispulse.module" = { "Takumi" = "Takumi:Main" }
