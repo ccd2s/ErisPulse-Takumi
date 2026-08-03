@@ -76,10 +76,20 @@ class Main(BaseModule):
         self.adapter = self.sdk.adapter
         self.client = self.sdk.client
 
-        self.renderer = Renderer(load_default_fonts=False)
+        self.renderer, self.families = self._create_renderer()
+        self.fonts = tuple(list_fonts())
+
+        self.logger.info(
+            f"PluginTakumi 初始化完成，已加载 {len(self.fonts)} 个内置字体文件"
+        )
+
+    @staticmethod
+    def _create_renderer(**kwargs: Any) -> tuple[Renderer, tuple[str, ...]]:
+        kwargs.setdefault("load_default_fonts", False)
+        renderer = Renderer(**kwargs)
         families: list[str] = []
         for filename, name, style, generic_family in _BUILTIN_FONTS:
-            registered = self.renderer.register_font(
+            registered = renderer.register_font(
                 FontResource(
                     get_font_bytes(filename),
                     name=name,
@@ -89,12 +99,12 @@ class Main(BaseModule):
             )
             families.extend(registered)
 
-        self.families = tuple(dict.fromkeys(families))
-        self.fonts = tuple(list_fonts())
+        return renderer, tuple(dict.fromkeys(families))
 
-        self.logger.info(
-            f"PluginTakumi 初始化完成，已加载 {len(self.fonts)} 个内置字体文件"
-        )
+    def create_renderer(self, **kwargs: Any) -> Renderer:
+        """创建一个已注册插件内置字体的独立 Renderer 实例。"""
+        renderer, _ = self._create_renderer(**kwargs)
+        return renderer
 
     def __getattr__(self, name: str):
         """将 takumi-py Renderer API 暴露到模块实例上。"""
