@@ -71,7 +71,7 @@ class Main(BaseModule):
         from ErisPulse import sdk as _sdk
 
         self.sdk = _sdk if sdk is None else sdk
-        self.logger = self.sdk.logger.get_child("PluginTakumi")  # pyright: ignore [reportCallIssue]
+        self.logger = self.sdk.logger.get_child("PluginTakumi")
         self.storage = self.sdk.storage
         self.adapter = self.sdk.adapter
         self.client = self.sdk.client
@@ -136,7 +136,7 @@ class Main(BaseModule):
     def get_load_strategy():
         from ErisPulse.loaders.strategy import ModuleLoadStrategy
 
-        return ModuleLoadStrategy(lazy_load=False, priority=100)
+        return ModuleLoadStrategy(lazy_load=True, priority=100)
 
     @override
     async def on_load(self, event: dict[str, Any]) -> bool:
