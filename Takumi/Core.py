@@ -46,8 +46,8 @@ _FONT_AWARE_METHODS = frozenset(
 
 
 @dataclass
-class PluginTakumiConfig(BaseConfig):
-    """PluginTakumi 模块配置"""
+class TakumiConfig(BaseConfig):
+    """Takumi 模块配置"""
 
     enabled: bool = field(
         default=True,
@@ -60,18 +60,18 @@ class PluginTakumiConfig(BaseConfig):
 @final
 class Main(BaseModule):
     """
-    PluginTakumi 模块
+    Takumi 模块
 
     封装 takumi-py 的 API，并提供开箱即用的中英文字体。
     """
 
-    ConfigClass = PluginTakumiConfig
+    ConfigClass = TakumiConfig
 
     def __init__(self, sdk=None):
         from ErisPulse import sdk as _sdk
 
         self.sdk = _sdk if sdk is None else sdk
-        self.logger = self.sdk.logger.get_child("PluginTakumi")
+        self.logger = self.sdk.logger.get_child("Takumi")
         self.storage = self.sdk.storage
         self.adapter = self.sdk.adapter
         self.client = self.sdk.client
@@ -80,7 +80,7 @@ class Main(BaseModule):
         self.fonts = tuple(list_fonts())
 
         self.logger.info(
-            f"PluginTakumi 初始化完成，已加载 {len(self.fonts)} 个内置字体文件"
+            f"Takumi 初始化完成，已加载 {len(self.fonts)} 个内置字体文件"
         )
 
     @staticmethod

@@ -1,5 +1,5 @@
 [project]
-name = "ErisPulse-PluginTakumi"
+name = "ErisPulse-Takumi"
 version = "1.1.0"
 description = "Use takumi-py to quickly render images."
 readme = "README.md"
@@ -17,7 +17,7 @@ dependencies = [
 "homepage" = "https://github.com/ccd2s/erispulse-plugin-takumi"
 
 [project.entry-points]
-"erispulse.module" = { "PluginTakumi" = "PluginTakumi:Main" }
+"erispulse.module" = { "Takumi" = "Takumi:Main" }
 
 [tool.setuptools]
-packages = ["PluginTakumi"]
+packages = ["Takumi"]
