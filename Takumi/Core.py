@@ -71,7 +71,10 @@ class Main(BaseModule):
         return self.renderer.render_node(node, **self._fonts(kwargs))
 
     def render_compiled(self, node: Any, **kwargs: Any) -> bytes:
-        return self.renderer.render_compiled(node, **self._fonts(kwargs))
+        # CompiledHtml 自动解包；字体在编译期已绑定，此处注入 font_families 会触发 takumi-py 0.3.0 的解析缺陷
+        if hasattr(node, "node"):
+            node = node.node
+        return self.renderer.render_compiled(node, **kwargs)
 
     def render_template(self, template_name: str, context: Any, **kwargs: Any) -> bytes:
         return self.renderer.render_template(template_name, context, **self._fonts(kwargs))
@@ -272,8 +275,11 @@ class Main(BaseModule):
         return self._save_render(data, "gif")
 
     def render_html_ex(self, html: str, options: dict | None = None) -> dict:
-        data = self.render_html(html, **(options or {}))
-        fmt = str((options or {}).get("format") or "png")
+        options = dict(options or {})
+        if not options.get("height"):
+            options.pop("height", None)
+        data = self.render_html(html, **options)
+        fmt = str(options.get("format") or "png")
         return self._save_render(data, fmt)
 
     def render_svg(self, html: str, options: dict | None = None) -> dict:
@@ -289,11 +295,11 @@ class Main(BaseModule):
         return info or {"repr": str(m)[:200]}
 
     def render_compiled_ex(self, compiled: Any, options: dict | None = None) -> dict:
-        # CompiledHtml（compile_html 产物）需取其 node；CompiledNode 可直接渲染
-        if not hasattr(compiled, "tag") and hasattr(compiled, "node"):
-            compiled = compiled.node
-        data = self.render_compiled(compiled, **(options or {}))
-        fmt = str((options or {}).get("format") or "png")
+        options = dict(options or {})
+        if not options.get("height"):
+            options.pop("height", None)
+        data = self.render_compiled(compiled, **options)
+        fmt = str(options.get("format") or "png")
         return self._save_render(data, fmt)
 
     def list_fonts(self) -> dict:
